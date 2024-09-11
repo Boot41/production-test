@@ -1,96 +1,70 @@
 import React, { useState } from 'react';
 
-// Header Component
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-lg p-4 flex justify-between items-center z-10">
-      <h1 className="text-lg font-bold">Application Tracking</h1>
-      <nav className="hidden md:flex space-x-4">
-        <a href="#applications" className="text-blue-500">Applications</a>
-        <a href="#about" className="text-blue-500">About</a>
-      </nav>
-      <button
-        className="md:hidden p-2"
-        aria-label="Toggle menu"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? '✖️' : '☰'}
-      </button>
-      {isMenuOpen && (
-        <nav className="absolute right-0 top-12 bg-white shadow-lg p-4">
-          <a href="#applications" className="block text-blue-500">Applications</a>
-          <a href="#about" className="block text-blue-500">About</a>
-        </nav>
-      )}
-    </header>
-  );
-};
-
-// ApplicationStatusTracker Component
-const ApplicationStatusTracker = () => {
-  const [filter, setFilter] = useState('all');
-
-  const applications = [
-    { id: 1, title: 'Frontend Developer', company: 'Company A', status: 'applied' },
-    { id: 2, title: 'Backend Developer', company: 'Company B', status: 'interview' },
-    { id: 3, title: 'Full Stack Developer', company: 'Company C', status: 'offer' },
-  ];
-
-  const filteredApplications = applications.filter(app => 
-    filter === 'all' || app.status === filter
-  );
-
-  return (
-    <main className="mt-16 p-4">
-      <h2 className="text-xl font-semibold mb-4">Your Applications</h2>
-      <div className="mb-4">
-        <label htmlFor="status-filter" className="mr-2">Filter:</label>
-        <select 
-          id="status-filter" 
-          value={filter} 
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
-        >
-          <option value="all">All</option>
-          <option value="applied">Applied</option>
-          <option value="interview">Interviews</option>
-          <option value="offer">Offers</option>
-        </select>
-      </div>
-      <div className="bg-white shadow-md p-4 rounded">
-        {filteredApplications.map(app => (
-          <div key={app.id} className="mb-3 border-b pb-2">
-            <h3 className="text-lg font-bold">{app.title}</h3>
-            <p className="text-gray-600">{app.company}</p>
-            <p className="text-blue-500">{app.status}</p>
-            <button className="text-blue-500 mt-2">View Details</button>
-          </div>
-        ))}
-      </div>
-    </main>
-  );
-};
-
-// Footer Component
-const Footer = () => {
-  return (
-    <footer className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4">
-      <p className="text-center text-gray-600">© 2023 Company Name</p>
-      <a href="#privacy" className="text-blue-500">Privacy Policy</a>
-    </footer>
-  );
-};
-
-// ApplicationTrackingPage Component
 const ApplicationTrackingPage = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleWithdrawClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleConfirmWithdraw = () => {
+    // Handle withdrawal logic here
+    setModalOpen(false);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <ApplicationStatusTracker />
-      <Footer />
+    <div className="flex flex-col h-screen bg-white p-4">
+      <header className="shadow-md p-4 bg-white">
+        <h1 className="font-bold text-xl">Application Tracking</h1>
+      </header>
+      <main className="flex flex-col justify-center items-center flex-grow">
+        <ApplicationStatusTracker />
+        <WithdrawApplicationButton onClick={handleWithdrawClick} />
+      </main>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="font-bold text-lg">Confirm Withdrawal</h2>
+            <p>Are you sure you want to withdraw your application?</p>
+            <div className="mt-4">
+              <button onClick={handleConfirmWithdraw} className="bg-red-600 text-white px-4 py-2 rounded mr-2">
+                Yes, Withdraw
+              </button>
+              <button onClick={() => setModalOpen(false)} className="border border-gray-300 px-4 py-2 rounded">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  );
+};
+
+// ApplicationStatusTracker component
+const ApplicationStatusTracker = () => {
+  // Sample status data
+  const status = "In Review"; // Replace with dynamic status logic
+  
+  return (
+    <div className="border border-gray-300 p-4 rounded w-full sm:w-1/2">
+      <h2 className="font-bold text-lg">Current Status</h2>
+      <p className="text-md">{status}</p>
+      {/* Progress indicator would be implemented here */}
+    </div>
+  );
+};
+
+// WithdrawApplicationButton component
+const WithdrawApplicationButton = ({ onClick }) => {
+  return (
+    <button
+      onClick={onClick}
+      className="bg-red-600 text-white font-bold px-6 py-3 mt-4 rounded shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+      aria-label="Withdraw Application"
+    >
+      Withdraw Application
+    </button>
   );
 };
 
