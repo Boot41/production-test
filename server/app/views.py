@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Job
-from .serializers import JobSerializer
+from .models import Job, JobApplication
+from .serializers import JobSerializer, JobApplicationSerializer
 
 @api_view(['POST'])
 def create_job(request):
@@ -60,3 +60,17 @@ def delete_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     job.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def apply_for_job(request, job_id):
+    serializer = JobApplicationSerializer(data=request.data)
+    if serializer.is_valid():
+        job_application = serializer.save(job_id=job_id, seeker_id=request.data.get('seeker_id'))
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def track_applications(request, seeker_id):
+    applications = JobApplication.objects.filter(seeker_id=seeker_id)
+    serializer = JobApplicationSerializer(applications, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

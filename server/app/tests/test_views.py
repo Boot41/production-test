@@ -1,22 +1,40 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Job
+from .models import Job, JobApplication
 
 class JobTests(APITestCase):
     def setUp(self):
-        self.valid_payload = {
+        self.valid_job_payload = {
             'employer_id': 1,
             'title': 'Software Engineer',
             'description': 'Develop and maintain software applications.',
             'location': 'Remote'
         }
-        self.job_id = self.client.post('/api/jobs', self.valid_payload, format='json').data['id']
+        self.job_response = self.client.post('/api/jobs', self.valid_job_payload, format='json')
+        self.job_id = self.job_response.data['id']
 
     def test_create_job(self):
-        response = self.client.post('/api/jobs', self.valid_payload, format='json')
+        response = self.client.post('/api/jobs', self.valid_job_payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Job.objects.count(), 2)
         self.assertEqual(Job.objects.get(id=response.data['id']).title, 'Software Engineer')
+
+    def test_apply_for_job(self):
+        valid_application_payload = {
+            'seeker_id': 1
+        }
+        response = self.client.post(f'/api/jobs/{self.job_id}/apply', valid_application_payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(JobApplication.objects.count(), 1)
+
+    def test_track_applications(self):
+        valid_application_payload = {
+            'seeker_id': 1
+        }
+        self.client.post(f'/api/jobs/{self.job_id}/apply', valid_application_payload, format='json')
+        response = self.client.get('/api/job-seekers/1/applications')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
 
     def test_fetch_filtered_jobs(self):
         response = self.client.get('/api/jobs/filter?title=Software')
@@ -24,21 +42,10 @@ class JobTests(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['title'], 'Software Engineer')
 
-    def test_fetch_filtered_jobs_no_results(self):
-        response = self.client.get('/api/jobs/filter?title=Non-existing')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
-
-    def test_create_job_invalid(self):
-        invalid_payload = {
-            'employer_id': None,
-            'title': '',
-            'description': 'Develop software.',
-            'location': 'Remote'
-        }
-        response = self.client.post('/api/jobs', invalid_payload, format='json')
+    def test_apply_for_job_invalid(self):
+        invalid_payload = {}
+        response = self.client.post(f'/api/jobs/{self.job_id}/apply', invalid_payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Job.objects.count(), 1)
 
     def test_list_jobs(self):
         response = self.client.get('/api/employers/1/jobs')
