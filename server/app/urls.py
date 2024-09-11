@@ -1,7 +1,1 @@
-from django.urls import path
-from .views import create_job, list_jobs
-
-urlpatterns = [
-    path('api/jobs', create_job, name='create_job'),
-    path('api/employers/<int:employer_id>/jobs', list_jobs, name='list_jobs'),
-]
+from django.urls import path\nfrom .views import create_job, list_jobs, update_job, delete_job\n\nurlpatterns = [\n    path('api/jobs', create_job, name='create_job'),\n    path('api/employers/<int:employer_id>/jobs', list_jobs, name='list_jobs'),\n    path('api/jobs/<int:job_id>', update_job, name='update_job'),\n    path('api/jobs/<int:job_id>', delete_job, name='delete_job'),\n]

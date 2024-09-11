@@ -1,12 +1,1 @@
-from django.test import TestCase
-from .models import Job
-
-class JobModelTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        Job.objects.create(employer_id=1, title='Software Engineer', description='Develop software.', location='Remote')
-
-    def test_job_content(self):
-        job = Job.objects.get(id=1)
-        expected_object_name = f'{job.title}'
-        self.assertEqual(expected_object_name, 'Software Engineer')
+from django.test import TestCase\nfrom .models import Job\n\nclass JobModelTest(TestCase):\n    @classmethod\n    def setUpTestData(cls):\n        Job.objects.create(employer_id=1, title='Software Engineer', description='Develop software.', location='Remote')\n\n    def test_job_content(self):\n        job = Job.objects.get(id=1)\n        expected_object_name = f'{job.title}'\n        self.assertEqual(expected_object_name, 'Software Engineer')\n        self.assertEqual(job.description, 'Develop software.')\n        self.assertEqual(job.location, 'Remote')\n        self.assertEqual(job.employer_id, 1)
