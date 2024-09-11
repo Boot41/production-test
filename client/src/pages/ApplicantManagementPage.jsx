@@ -1,49 +1,49 @@
 import React from 'react';
 
-const Header = () => (
-  <header style={{ position: 'fixed', top: 0, left: 0, right: 0, backgroundColor: '#003366', color: '#ffffff', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: '1000' }}>
-    <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Applicant Management</h1>
-    <nav>
-      <a href="#dashboard" style={{ color: '#ffffff', marginRight: '15px' }}>Dashboard</a>
-      <a href="#reports" style={{ color: '#ffffff' }}>Reports</a>
-    </nav>
-  </header>
-);
-
-const ApplicantManager = () => {
+const ApplicantManagement = () => {
   return (
-    <main style={{ marginTop: '60px', padding: '20px', backgroundColor: '#ffffff' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <input type="text" aria-label="Search applicants" placeholder="Search applicants..." style={{ padding: '10px', width: '100%', border: '1px solid lightgray', borderRadius: '4px' }} />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Example of an applicant item */}
-        <div style={{ border: '1px solid lightgray', padding: '10px', marginBottom: '10px', borderRadius: '4px' }}>
-          <h2 style={{ margin: '0 0 5px' }}>Applicant Name</h2>
-          <p>Status: Active</p>
-          <button style={{ marginRight: '5px' }}>View</button>
-          <button>Edit</button>
-        </div>
-        {/* Additional applicants would be rendered here */}
-      </div>
-    </main>
-  );
-};
-
-const Footer = () => (
-  <footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: '#f0f0f0', padding: '10px', textAlign: 'center' }}>
-    <p style={{ margin: 0 }}>© 2023 Applicant Management System</p>
-  </footer>
-);
-
-const ApplicantManagementPage = () => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header />
-      <ApplicantManager />
-      <Footer />
+    <div className="flex flex-col h-screen bg-white">
+      <header className="bg-gray-200 shadow-md fixed w-full p-4 z-10">
+        <h1 className="text-xl font-bold">Applicant Management</h1>
+      </header>
+      <main className="mt-16 p-4 overflow-auto flex-grow">
+        <ApplicantManager />
+      </main>
     </div>
   );
 };
 
-export default ApplicantManagementPage;
+const ApplicantManager = () => {
+  return (
+    <div className="bg-white border border-gray-300 shadow-md rounded-lg p-4">
+      {/* Search Bar for filtering applicants */}
+      <input
+        type="text"
+        placeholder="Search Applicants"
+        className="border rounded p-2 mb-4 w-full"
+        aria-label="Search Applicants"
+      />
+      {/* List and detailed entry implementation will be here */}
+      {/* Each applicant will have a button to view more details */}
+    </div>
+  );
+};
+
+const ApplicationStatusUpdater = () => {
+  return (
+    <div className="bg-white border border-gray-300 shadow-md rounded-lg p-4">
+      <label htmlFor="status" className="block font-bold mb-2">Update Application Status</label>
+      <select id="status" className="border rounded p-2 mb-4 w-full" aria-label="Select status">
+        <option value="" disabled selected>Select status</option>
+        <option value="pending">Pending</option>
+        <option value="accepted">Accepted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <button className="bg-blue-500 text-white rounded p-2 hover:bg-blue-600" type="submit" aria-label="Submit status update">
+        Submit
+      </button>
+    </div>
+  );
+};
+
+export default ApplicantManagement;
