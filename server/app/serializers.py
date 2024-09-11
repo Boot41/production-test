@@ -1,7 +1,1 @@
-from rest_framework import serializers
-from .models import Job
-
-class JobSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Job
-        fields = '__all__'
+from rest_framework import serializers\nfrom .models import Job\n\nclass JobSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = Job\n        fields = '__all__'
