@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Footer from './components/Footer'; 
 import EmployerDashboard from './pages/EmployerDashboard'; 
 import JobSearchPage from './pages/JobSearchPage'; 
+import JobDetailPage from './pages/JobDetailPage'; 
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/job-search" element={<JobSearchPage />} />
-          {/* Add other routes here */}
+          <Route path="/job-detail" element={<JobDetailPage />} />
         </Routes>
         <Footer />
       </div>
