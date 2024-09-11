@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import Header from './components/Header'; 
+import Footer from './components/Footer'; 
+import EmployerDashboard from './pages/EmployerDashboard'; 
+import JobSearchPage from './pages/JobSearchPage'; 
+import JobDetailPage from './pages/JobDetailPage'; 
+import JobApplicationPage from './pages/JobApplicationPage'; 
+import ApplicationTrackingPage from './pages/ApplicationTrackingPage'; 
+import EditApplicationPage from './pages/EditApplicationPage'; 
+import ApplicantManagementPage from './pages/ApplicantManagementPage'; 
+import ProfileEditPage from './pages/ProfileEditPage'; 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route path="/job-search" element={<JobSearchPage />} />
+          <Route path="/job-detail" element={<JobDetailPage />} />
+          <Route path="/job-application" element={<JobApplicationPage />} />
+          <Route path="/application-tracking" element={<ApplicationTrackingPage />} />
+          <Route path="/edit-application" element={<EditApplicationPage />} />
+          <Route path="/applicant-management" element={<ApplicantManagementPage />} />
+          <Route path="/profile-edit" element={<ProfileEditPage />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
