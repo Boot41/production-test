@@ -4,32 +4,24 @@ import JobListing from './JobListing';
 
 const JobSearchPage = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-800">
-      {/* Fixed Header */}
-      <header className="bg-blue-600 text-white p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-lg font-bold">Job Search</h1>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><a href="/" className="hover:underline">Home</a></li>
-              <li><a href="/about" className="hover:underline">About</a></li>
-              <li><a href="/contact" className="hover:underline">Contact</a></li>
-            </ul>
-          </nav>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Header Section */}
+      <header className="fixed top-0 left-0 right-0 bg-white shadow-lg p-4 flex items-center justify-between">
+        <div className="text-lg font-bold">Site Logo</div>
+        <nav className="space-x-4">
+          <a href="#home" className="text-blue-500 hover:underline">Home</a>
+          <a href="#jobs" className="text-blue-500 hover:underline">Jobs</a>
+          <a href="#about" className="text-blue-500 hover:underline">About</a>
+        </nav>
       </header>
-
+      
       {/* Main Content Area */}
-      <main className="flex flex-col flex-grow container mx-auto p-4">
+      <main className="flex-grow pt-20 p-4 bg-gray-100">
         {/* Job Search Filter */}
-        <section className="mb-4">
-          <JobSearchFilter />
-        </section>
+        <JobSearchFilter />
         
-        {/* Job Listing */}
-        <section className="flex-grow">
-          <JobListing />
-        </section>
+        {/* Job Listings */}
+        <JobListing />
       </main>
     </div>
   );
