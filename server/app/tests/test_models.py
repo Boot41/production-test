@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Job, JobApplication
+from .models import Job, JobApplication, JobSeekerProfile
 
 class JobModelTest(TestCase):
     @classmethod
@@ -34,3 +34,18 @@ class JobApplicationModelTest(TestCase):
     def test_application_string_representation(self):
         application = JobApplication.objects.get(id=1)
         self.assertEqual(str(application), 'Application for Software Engineer by seeker 1')
+
+class JobSeekerProfileModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        JobSeekerProfile.objects.create(work_history='Worked at ABC Corp.', skills='Python', education='BSc in Computer Science')
+
+    def test_profile_content(self):
+        profile = JobSeekerProfile.objects.get(seeker_id=1)
+        self.assertEqual(profile.work_history, 'Worked at ABC Corp.')
+        self.assertEqual(profile.skills, 'Python')
+        self.assertEqual(profile.education, 'BSc in Computer Science')
+
+    def test_profile_string_representation(self):
+        profile = JobSeekerProfile.objects.get(seeker_id=1)
+        self.assertEqual(str(profile), 'Profile for seeker 1')

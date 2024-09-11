@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Job, JobApplication
+from .models import Job, JobApplication, JobSeekerProfile
+from .serializers import JobSeekerProfileSerializer
 
 class JobTests(APITestCase):
     def setUp(self):
@@ -17,6 +18,13 @@ class JobTests(APITestCase):
         }
         self.application_response = self.client.post(f'/api/jobs/{self.job_id}/apply', self.valid_application_payload, format='json')
         self.application_id = self.application_response.data['id']
+        self.valid_profile_payload = {
+            'work_history': 'Previous job at XYZ Corp.',
+            'skills': 'Python, Django',
+            'education': 'BSc in Computer Science'
+        }
+        self.profile_response = self.client.post('/api/job-seekers', self.valid_profile_payload, format='json')
+        self.seeker_id = self.profile_response.data['seeker_id']
 
     def test_create_job(self):
         response = self.client.post('/api/jobs', self.valid_job_payload, format='json')
@@ -37,7 +45,7 @@ class JobTests(APITestCase):
             'seeker_id': 1
         }
         self.client.post(f'/api/jobs/{self.job_id}/apply', valid_application_payload, format='json')
-        response = self.client.get('/api/job-seekers/1/applications')
+        response = self.client.get(f'/api/job-seekers/{self.seeker_id}/applications')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -93,3 +101,32 @@ class JobTests(APITestCase):
         response = self.client.post(f'/api/applications/{self.application_id}/schedule-interview', {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['error'], 'Interview time is required.')
+
+    def test_create_job_seeker_profile(self):
+        response = self.client.post('/api/job-seekers', self.valid_profile_payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(JobSeekerProfile.objects.count(), 2)
+
+    def test_fetch_job_seeker_profile(self):
+        response = self.client.get(f'/api/job-seekers/{self.seeker_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['work_history'], 'Previous job at XYZ Corp.')
+
+    def test_update_job_seeker_profile(self):
+        updated_payload = {
+            'skills': 'Python, Django, REST APIs'
+        }
+        response = self.client.put(f'/api/job-seekers/{self.seeker_id}', updated_payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(JobSeekerProfile.objects.get(seeker_id=self.seeker_id).skills, 'Python, Django, REST APIs')
+
+    def test_fetch_job_seeker_profile_not_found(self):
+        response = self.client.get('/api/job-seekers/9999')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_job_seeker_profile_not_found(self):
+        updated_payload = {
+            'skills': 'Python, JavaScript'
+        }
+        response = self.client.put('/api/job-seekers/9999', updated_payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

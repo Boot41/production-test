@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Job, JobApplication
-from .serializers import JobSerializer, JobApplicationSerializer
+from .models import Job, JobApplication, JobSeekerProfile
+from .serializers import JobSerializer, JobApplicationSerializer, JobSeekerProfileSerializer
 
 @api_view(['POST'])
 def create_job(request):
@@ -85,3 +85,26 @@ def schedule_interview(request, application_id):
     job_application.status = 'interview'
     job_application.save()
     return Response({'message': 'Interview scheduled successfully.'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def create_job_seeker_profile(request):
+    serializer = JobSeekerProfileSerializer(data=request.data)
+    if serializer.is_valid():
+        profile = serializer.save()
+        return Response(JobSeekerProfileSerializer(profile).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def fetch_job_seeker_profile(request, seeker_id):
+    profile = get_object_or_404(JobSeekerProfile, seeker_id=seeker_id)
+    serializer = JobSeekerProfileSerializer(profile)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+def update_job_seeker_profile(request, seeker_id):
+    profile = get_object_or_404(JobSeekerProfile, seeker_id=seeker_id)
+    serializer = JobSeekerProfileSerializer(profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        profile = serializer.save()
+        return Response(JobSeekerProfileSerializer(profile).data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
