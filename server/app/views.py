@@ -40,6 +40,12 @@ def fetch_filtered_jobs(request):
     serializer = JobSerializer(jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def fetch_job_detail(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    serializer = JobSerializer(job)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 @api_view(['PUT'])
 def update_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)

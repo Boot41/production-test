@@ -62,3 +62,8 @@ class JobTests(APITestCase):
     def test_delete_job_not_found(self):
         response = self.client.delete('/api/jobs/9999')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_fetch_job_detail(self):
+        response = self.client.get(f'/api/jobs/{self.job_id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Software Engineer')
