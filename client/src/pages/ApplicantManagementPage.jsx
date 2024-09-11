@@ -1,47 +1,45 @@
 import React from 'react';
+import InterviewScheduler from './InterviewScheduler';
+import Applicant from './Applicant';
 
 const ApplicantManagement = () => {
   return (
-    <div className="flex flex-col h-screen bg-white">
-      <header className="bg-gray-200 shadow-md fixed w-full p-4 z-10">
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Fixed header */}
+      <header className="flex justify-between items-center p-4 shadow-md bg-white">
         <h1 className="text-xl font-bold">Applicant Management</h1>
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          aria-label="Add new applicant"
+        >
+          Add Applicant
+        </button>
       </header>
-      <main className="mt-16 p-4 overflow-auto flex-grow">
-        <ApplicantManager />
+
+      {/* Main content area */}
+      <main className="flex-grow p-4">
+        <InterviewScheduler />
+
+        {/* Applicant List */}
+        <div className="mt-4">
+          {applicants.map((applicant, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md border rounded my-2 p-4"
+              aria-labelledby={`applicant-${index}`}
+            >
+              <h2 id={`applicant-${index}`} className="text-lg font-semibold">{applicant.name}</h2>
+              <p className="text-sm text-gray-600">Status: {applicant.status}</p>
+              <button
+                className="bg-blue-500 text-white mt-2 py-1 px-3 rounded hover:bg-blue-600"
+                aria-label={`View details for ${applicant.name}`}
+              >
+                View Details
+              </button>
+            </div>
+          ))}
+        </div>
       </main>
-    </div>
-  );
-};
-
-const ApplicantManager = () => {
-  return (
-    <div className="bg-white border border-gray-300 shadow-md rounded-lg p-4">
-      {/* Search Bar for filtering applicants */}
-      <input
-        type="text"
-        placeholder="Search Applicants"
-        className="border rounded p-2 mb-4 w-full"
-        aria-label="Search Applicants"
-      />
-      {/* List and detailed entry implementation will be here */}
-      {/* Each applicant will have a button to view more details */}
-    </div>
-  );
-};
-
-const ApplicationStatusUpdater = () => {
-  return (
-    <div className="bg-white border border-gray-300 shadow-md rounded-lg p-4">
-      <label htmlFor="status" className="block font-bold mb-2">Update Application Status</label>
-      <select id="status" className="border rounded p-2 mb-4 w-full" aria-label="Select status">
-        <option value="" disabled selected>Select status</option>
-        <option value="pending">Pending</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
-      </select>
-      <button className="bg-blue-500 text-white rounded p-2 hover:bg-blue-600" type="submit" aria-label="Submit status update">
-        Submit
-      </button>
     </div>
   );
 };
